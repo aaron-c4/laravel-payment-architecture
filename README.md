@@ -1,9 +1,11 @@
 # MockPay API - Laravel Architecture Demo 🚀
 
+![Laravel Code Quality](https://github.com/aaron-c4/laravel-payment-architecture/actions/workflows/laravel.yml/badge.svg)
+
 Este proyecto es una implementación de prueba de concepto (PoC) diseñada para demostrar patrones de arquitectura avanzados y desacoplamiento en **Laravel 12**.
 
 ## 🧠 Conceptos Implementados
-* **Strategy Pattern:** Implementación polimórfica de pasarelas de pago (`Paypal`, `Stripe`, `BankTransfer`) intercambiables en tiempo de ejecución.
+* **Strategy Pattern:** Implementación polimórfica de pasarelas de pago (`Paypal`, `Stripe`) intercambiables en tiempo de ejecución.
 * **Service Container:** Inyección de dependencias y resolución de clases basada en configuración de entorno (`.env`).
 * **Clean Architecture:** Controladores "delgados" que delegan la lógica de negocio a Servicios dedicados.
 * **Eloquent Relationships:** Relación `1:N` (Uno a Muchos) eficiente entre Usuarios y Transacciones.
@@ -34,8 +36,6 @@ Este proyecto es una implementación de prueba de concepto (PoC) diseñada para 
     ```
 
 4.  **Base de Datos (MySQL)**
-    * Crea una base de datos vacía en tu servidor MySQL (ej: `mockpay_db`).
-    * Abre el archivo `.env` y configura tus credenciales:
     ```env
     DB_CONNECTION=mysql
     DB_HOST=127.0.0.1
