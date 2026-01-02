@@ -18,7 +18,7 @@ class PaymentController extends Controller
         // 1. Buscamos al usuario "falso" (Simulamos que está logueado)
         $user = \App\Models\User::find(1);
 
-        // Pequeña validación por si olvidasto el db:seed
+        // Pequeña validación por si olvido el db:seed
         if (! $user) {
             return response()->json(['error' => 'Usuario no encontrado. Ejecuta: php artisan db:seed'], 404);
         }
@@ -26,7 +26,7 @@ class PaymentController extends Controller
         // 2. Procesamos el cobro con el Servicio (Esto no cambia)
         $result = $this->gateway->charge($request->input('amount'));
 
-        // 3. LA MAGIA DE ELOQUENT:
+        // 3. MAGIA DE ELOQUENT:
         // En lugar de usar Transaction::create y pasarle manualmente el ID...
         // Usamos la relación "$user->transactions()".
         // asigna automáticamente el 'user_id' por nosotros.

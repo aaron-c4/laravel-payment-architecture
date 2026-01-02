@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
 
-            // Esto crea la columna user_id Y la conecta con la tabla users
+            // crea la columna user_id Y la conecta con la tabla users
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
 
             $table->id();

@@ -11,7 +11,7 @@ class PaymentServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        // AQUÍ ESTÁ TU TEORÍA APLICADA
+        // TEORÍA APLICADA
         $this->app->bind(PaymentGateway::class, function ($app) {
 
             // Leemos la config (simulada desde .env)
