@@ -19,7 +19,7 @@ class PaymentController extends Controller
         $user = \App\Models\User::find(1);
 
         // Pequeña validación por si olvidasto el db:seed
-        if (!$user) {
+        if (! $user) {
             return response()->json(['error' => 'Usuario no encontrado. Ejecuta: php artisan db:seed'], 404);
         }
 
@@ -29,19 +29,19 @@ class PaymentController extends Controller
         // 3. LA MAGIA DE ELOQUENT:
         // En lugar de usar Transaction::create y pasarle manualmente el ID...
         // Usamos la relación "$user->transactions()".
-        //asigna automáticamente el 'user_id' por nosotros.
-    
+        // asigna automáticamente el 'user_id' por nosotros.
+
         $transaction = $user->transactions()->create([
-            'provider'    => $result['provider'],
-            'amount'      => $result['amount'],
-            'status'      => $result['status'],
-            'external_id' => $result['transaction_id']
+            'provider' => $result['provider'],
+            'amount' => $result['amount'],
+            'status' => $result['status'],
+            'external_id' => $result['transaction_id'],
             // ¡sin user_id aquí!
         ]);
 
         return response()->json([
             'message' => 'Pago procesado y asociado al usuario',
-            'data' => $transaction
+            'data' => $transaction,
         ]);
     }
 }

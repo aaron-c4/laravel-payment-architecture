@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services;
+
 use App\Interfaces\PaymentGateway;
 
 class PaypalService implements PaymentGateway
@@ -14,7 +15,7 @@ class PaypalService implements PaymentGateway
             'provider' => 'paypal',
             'amount' => $amount,
             'status' => 'success',
-            'transaction_id' => 'PAY-' . uniqid()
+            'transaction_id' => 'PAY-'.uniqid(),
         ];
     }
 }

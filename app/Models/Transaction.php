@@ -8,11 +8,11 @@ class Transaction extends Model
 {
     //
     protected $fillable = [
-        'provider', 
-        'amount', 
-        'status', 
+        'provider',
+        'amount',
+        'status',
         'external_id',
-        'user_id'
+        'user_id',
     ];
 
     // 2. Relación inversa: Pertenece a un usuario

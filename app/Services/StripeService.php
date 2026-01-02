@@ -13,7 +13,7 @@ class StripeService implements PaymentGateway
             'provider' => 'stripe',
             'amount' => $amount,
             'status' => 'success',
-            'transaction_id' => 'STR-' . uniqid()
+            'transaction_id' => 'STR-'.uniqid(),
         ];
     }
 }

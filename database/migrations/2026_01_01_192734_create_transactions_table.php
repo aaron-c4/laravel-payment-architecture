@@ -16,7 +16,6 @@ return new class extends Migration
             // Esto crea la columna user_id Y la conecta con la tabla users
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
 
-
             $table->id();
             $table->string('provider');
             $table->decimal('amount', 8, 2); // 8 dígitos total, 2 decimales
