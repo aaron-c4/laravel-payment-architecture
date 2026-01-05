@@ -8,6 +8,7 @@ class StripeService implements PaymentGateway
 {
     public function charge(float $amount): array
     {
+
         // Simulamos un comportamiento distinto
         return [
             'provider' => 'stripe',
