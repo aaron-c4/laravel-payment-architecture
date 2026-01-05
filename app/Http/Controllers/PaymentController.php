@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Interfaces\PaymentGateway;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use App\Http\Requests\StorePaymentRequest;
 
 class PaymentController extends Controller
 {
@@ -13,35 +14,31 @@ class PaymentController extends Controller
         protected PaymentGateway $gateway
     ) {}
 
-    public function store(Request $request)
+    /**
+     * Process a new payment transaction.
+     */
+    public function store(StorePaymentRequest $request)
     {
-        // 1. Buscamos al usuario "falso" (Simulamos que está logueado)
+        // TODO: Retrieve the authenticated user dynamically via Auth::user()
         $user = \App\Models\User::find(1);
 
-        // Pequeña validación por si olvido el db:seed
-        if (! $user) {
-            return response()->json(['error' => 'Usuario no encontrado. Ejecuta: php artisan db:seed'], 404);
-        }
+        // Retrieve only the validated input data
+        $validated = $request->validated();
 
-        // 2. Procesamos el cobro con el Servicio (Esto no cambia)
-        $result = $this->gateway->charge($request->input('amount'));
+        // Process payment through the injected gateway strategy
+        $result = $this->gateway->charge($validated['amount']);
 
-        // 3. MAGIA DE ELOQUENT:
-        // En lugar de usar Transaction::create y pasarle manualmente el ID...
-        // Usamos la relación "$user->transactions()".
-        // asigna automáticamente el 'user_id' por nosotros.
-
+        // Persist the transaction record
         $transaction = $user->transactions()->create([
-            'provider' => $result['provider'],
-            'amount' => $result['amount'],
-            'status' => $result['status'],
-            'external_id' => $result['transaction_id'],
-            // ¡sin user_id aquí!
+            'provider'    => $result['provider'],
+            'amount'      => $result['amount'],
+            'status'      => $result['status'],
+            'external_id' => $result['transaction_id']
         ]);
 
         return response()->json([
-            'message' => 'Pago procesado y asociado al usuario',
-            'data' => $transaction,
+            'message' => 'Payment processed successfully',
+            'data' => $transaction
         ]);
     }
 }
