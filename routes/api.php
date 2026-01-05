@@ -1,11 +1,31 @@
 <?php
 
-use App\Http\Controllers\PaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\AuthController;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+/*
+|--------------------------------------------------------------------------
+| Public Routes
+|--------------------------------------------------------------------------
+*/
 
-Route::post('/pay', [PaymentController::class, 'store']);
+Route::post('/login', [AuthController::class, 'login']);
+
+/*
+|--------------------------------------------------------------------------
+| Protected Routes (Requires Sanctum Token)
+|--------------------------------------------------------------------------
+*/
+
+Route::middleware('auth:sanctum')->group(function () {
+    
+    // Process payment transaction
+    Route::post('/pay', [PaymentController::class, 'store']);
+    
+    // Retrieve authenticated user details
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+});

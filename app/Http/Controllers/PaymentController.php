@@ -25,9 +25,8 @@ class PaymentController extends Controller
     public function store(StorePaymentRequest $request)
     {
         try {
-            // TODO: Retrieve the authenticated user dynamically via Auth::user()
-            $user = \App\Models\User::find(1);
-
+            // Retrieve the currently authenticated user from the request context
+            $user = $request->user();
             // Retrieve validated data
             $validated = $request->validated();
 
