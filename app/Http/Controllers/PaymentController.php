@@ -3,37 +3,56 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePaymentRequest;
-use App\Interfaces\PaymentGateway;
-use Illuminate\Support\Facades\Log; // <--- Importante: Herramienta de Logs
+use App\Services\PaymentGatewayInterface;
+use Illuminate\Support\Facades\Log;
 use Exception;
+use OpenApi\Attributes as OA; // Importante
 
 class PaymentController extends Controller
 {
     protected $gateway;
 
-    /**
-     * Dependency Injection via Service Container.
-     */
-    public function __construct(PaymentGateway $gateway)
+    public function __construct(PaymentGatewayInterface $gateway)
     {
         $this->gateway = $gateway;
     }
 
-    /**
-     * Process a new payment transaction with error handling.
-     */
+    #[OA\Post(
+        path: '/api/pay',
+        summary: 'Procesar un pago',
+        tags: ['Payments'],
+        security: [['bearerAuth' => []]], // Requiere candado
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                properties: [
+                    new OA\Property(property: 'amount', type: 'number', format: 'float', example: 150.00),
+                    new OA\Property(property: 'provider', type: 'string', example: 'stripe'),
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Pago procesado',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'message', type: 'string', example: 'Payment processed successfully'),
+                        new OA\Property(property: 'data', type: 'object')
+                    ]
+                )
+            ),
+            new OA\Response(response: 401, description: 'No autenticado')
+        ]
+    )]
     public function store(StorePaymentRequest $request)
     {
         try {
-            // Retrieve the currently authenticated user from the request context
             $user = $request->user();
-            // Retrieve validated data
             $validated = $request->validated();
-
-            // Attempt to charge the wallet
+            
             $result = $this->gateway->charge($validated['amount']);
 
-            // Persist transaction
             $transaction = $user->transactions()->create([
                 'provider'    => $result['provider'],
                 'amount'      => $result['amount'],
@@ -47,17 +66,14 @@ class PaymentController extends Controller
             ]);
 
         } catch (Exception $e) {
-            // 1. Log the technical error for developers (Internal)
             Log::error('Payment processing failed', [
                 'error' => $e->getMessage(),
-                'user_id' => 1, // Static for now
-                'trace' => $e->getTraceAsString()
+                'user_id' => $request->user() ? $request->user()->id : 'guest',
             ]);
 
-            // 2. Return a generic error message to the user (Public)
             return response()->json([
-                'message' => 'An error occurred while processing your payment. Please try again later.',
-                'error_code' => 'PAYMENT_GATEWAY_ERROR' // Optional custom code
+                'message' => 'Error processing payment',
+                'error_code' => 'PAYMENT_ERROR'
             ], 500);
         }
     }
