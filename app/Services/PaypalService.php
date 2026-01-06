@@ -2,20 +2,19 @@
 
 namespace App\Services;
 
-use App\Interfaces\PaymentGateway;
 
-class PaypalService implements PaymentGateway
+use App\Services\PaymentGatewayInterface;
+
+
+class PaypalService implements PaymentGatewayInterface
 {
     public function charge(float $amount): array
     {
-        // Simulamos latencia de red
-        sleep(2);
-
         return [
             'provider' => 'paypal',
             'amount' => $amount,
             'status' => 'success',
-            'transaction_id' => 'PAY-'.uniqid(),
+            'transaction_id' => 'PAY-' . uniqid(),
         ];
     }
 }

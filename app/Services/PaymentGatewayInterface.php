@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Interfaces;
+namespace App\Services;
 
-interface PaymentGateway
+interface PaymentGatewayInterface
 {
     public function charge(float $amount): array;
 }

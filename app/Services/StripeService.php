@@ -2,19 +2,17 @@
 
 namespace App\Services;
 
-use App\Interfaces\PaymentGateway;
+use App\Services\PaymentGatewayInterface;
 
-class StripeService implements PaymentGateway
+class StripeService implements PaymentGatewayInterface
 {
     public function charge(float $amount): array
     {
-
-        // Simulamos un comportamiento distinto
         return [
             'provider' => 'stripe',
             'amount' => $amount,
             'status' => 'success',
-            'transaction_id' => 'STR-'.uniqid(),
+            'transaction_id' => 'STR-' . uniqid(),
         ];
     }
 }
