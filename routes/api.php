@@ -22,7 +22,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     
     // Process payment transaction
-    Route::post('/pay', [PaymentController::class, 'store']);
+    Route::post('/pay', [PaymentController::class, 'pay']);
     
     // Retrieve authenticated user details
     Route::get('/user', function (Request $request) {
